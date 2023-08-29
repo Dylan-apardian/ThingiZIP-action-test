@@ -26,7 +26,8 @@ jobs:
       with:
         node-version: '18.x'
         cache: 'npm'
-    - run: cd ./thingizip && npm install    
+    - run: npm install
+      working-directory: ./thingizip
     - uses: actions/checkout@v3
     - name: Build
       uses: actions/setup-node@v3
