@@ -31,6 +31,9 @@ jobs:
     - uses: actions/checkout@v3
     - name: Install Dependencies
       run: npm install
+    - uses: actions/checkout@v3
+    - name: Install Vite
+      run: npm i vite      
       working-directory: ${{env.working-directory}}
     - uses: actions/checkout@v3
     - name: Build      
