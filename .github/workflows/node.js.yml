@@ -28,9 +28,9 @@ jobs:
         run: zip -r thingizip-chrome.zip .
 
       - name: Modify manifest.json
-        working-directory: ./thingizip/dist/manifest.json  # Change this to your dist directory
+        working-directory: ./thingizip/dist/  # Change this to your dist directory
         run: |
-          echo "modifying manifest"
+          less manifest.json
           # Add your code here to modify manifest.json as needed
 
       - name: Create Modified Zip
