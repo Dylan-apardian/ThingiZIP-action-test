@@ -23,14 +23,19 @@ jobs:
           npm install
           npm run build
 
-      - name: Create Initial Zip
+      - name: Create Chrome Zip
         working-directory: ./thingizip/dist  # Change this to your dist directory
         run: zip -r thingizip-chrome.zip .
 
-      - name: Modify manifest.json
+      - name: Install jq
+        run: sudo apt-get install -y jq
+
+      - name: Modify manifest.json for Firefox
         working-directory: ./thingizip/dist/  # Change this to your dist directory
         run: |
+          jq '. += {"newKey": "newValue"}' manifest.json > temp-manifest.json
           less manifest.json
+          less temp-manifest.json
           # Add your code here to modify manifest.json as needed
 
       - name: Create Modified Zip
