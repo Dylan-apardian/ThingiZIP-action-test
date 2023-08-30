@@ -1,46 +1,38 @@
-# This workflow will do a clean installation of node dependencies, cache/restore them, build the source code and run tests across different versions of node
-# For more information see: https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-nodejs
-
-name: Node.js CI
-
+name: Create Release
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main
 
 jobs:
   build:
-
     runs-on: ubuntu-latest
-    env:
-      working-directory: ./thingizip
-      dist-directory: ./thingizip/dist
-
-
-    strategy:
-      matrix:
-        node-version: [18.x]
-        # See supported Node.js release schedule at https://nodejs.org/en/about/releases/
-
+    
     steps:
-    - uses: actions/checkout@v3
-    - name: thingizip dir
-      run: ls
-      working-directory: ${{env.working-directory}}
-    - uses: actions/checkout@v3
-    - name: Install Dependencies
-      run: npm install
-      working-directory: ${{env.working-directory}}      
-    - uses: actions/checkout@v3
-    - name: Install Vite
-      run: npm i vite      
-      working-directory: ${{env.working-directory}}
-    - uses: actions/checkout@v3
-    - name: Build      
-      run: npm run build
-      working-directory: ${{env.working-directory}}
-    - uses: actions/checkout@v3
-    - name: Dist dir
-      run: ls
-      working-directory: ${{env.dist-directory}}      
+      - name: Checkout Repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 18  # You can change this to your desired Node.js version
+
+      - name: Install Dependencies and Build
+        working-directory: ./thingizip  # Change this to your project directory
+        run: |
+          npm install
+          npm run build
+
+      - name: Create Initial Zip
+        working-directory: ./thingizip/dist  # Change this to your dist directory
+        run: zip -r thingizip-chrome.zip .
+
+      - name: Modify manifest.json
+        working-directory: ./thingizip/dist/manifest.json  # Change this to your dist directory
+        run: |
+          echo "modifying manifest"
+          # Add your code here to modify manifest.json as needed
+
+      - name: Create Modified Zip
+        working-directory: ./thingizip/dist  # Change this to your dist directory
+        run: zip -r thingizip-firefox.zip .
