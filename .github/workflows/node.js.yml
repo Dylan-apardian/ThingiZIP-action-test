@@ -33,7 +33,7 @@ jobs:
       - name: Modify manifest.json for Firefox
         working-directory: ./thingizip/dist/  # Change this to your dist directory
         run: |
-          jq '. += {"newKey": "newValue"}' manifest.json > temp-manifest.json
+          jq '. += {"browser_specific_settings": { "gecko": { "id": "{59085801-0630-4e97-9c51-8d15d04d4527}", "strict_min_version": "65.0" } } }' manifest.json > temp-manifest.json
           less manifest.json
           less temp-manifest.json
           # Add your code here to modify manifest.json as needed
