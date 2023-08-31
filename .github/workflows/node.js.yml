@@ -34,10 +34,41 @@ jobs:
         working-directory: ./thingizip/dist/  # Change this to your dist directory
         run: |
           jq '. += {"browser_specific_settings": { "gecko": { "id": "{59085801-0630-4e97-9c51-8d15d04d4527}", "strict_min_version": "65.0" } } }' manifest.json > temp-manifest.json
-          less manifest.json
-          less temp-manifest.json
-          # Add your code here to modify manifest.json as needed
+          mv temp-manifest.json manifest.json          
 
-      - name: Create Modified Zip
+      - name: Create Firefox Zip
         working-directory: ./thingizip/dist  # Change this to your dist directory
         run: zip -r thingizip-firefox.zip .
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+          
+      - name: Upload Chrome Zip Asset        
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/thingizip-chrome.zip
+          asset_name: thingizip-chrome.zip
+          asset_content_type: application/zip 
+          
+      - name: Upload Firefox Zip Asset        
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          asset_path: ./output/thingizip-firefox.zip
+          asset_name: thingizip-firefox.zip
+          asset_content_type: application/zip        
+
+    
